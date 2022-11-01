@@ -15,12 +15,23 @@ services:
       - "5432:5432"
 
 # TODO добавить сервисы
+  flights:
+    build:
+      context: src/flights
+    ports:
+      - "8060:8080"
+    depends_on:
+      - postgres
+    links: 
+      - postgres
+
   gateway:
     build:
       context: src/gateway
-      dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    depends_on:
+      - flights
 
 volumes:
   db-data:

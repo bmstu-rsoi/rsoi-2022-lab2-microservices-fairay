@@ -1,11 +1,14 @@
 package controllers
 
 import (
+	"fmt"
 	"gateway/controllers/responses"
 	"gateway/objects"
+	"gateway/utils"
+	"io/ioutil"
 
+	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -20,23 +23,22 @@ func InitFlights(r *mux.Router) {
 
 func (ctrl *filghtCtrl) get(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
-	page, _ := strconv.Atoi(queryParams.Get("page"))
-	page_size, _ := strconv.Atoi(queryParams.Get("size"))
 
-	data := &objects.PaginationResponse{
-		Page:          page,
-		PageSize:      page_size,
-		TotalElements: 1,
-		Items: []objects.FilghtResponse{
-			{
-				FlightNumber: "AFL031",
-				FromAirport:  "Санкт-Петербург Пулково",
-				ToAirport:    "Москва Шереметьево",
-				Date:         "2021-10-08 20:00",
-				Price:        1500,
-			},
-		},
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/flights", utils.Config.FlightsEndpoint), nil)
+	q := req.URL.Query()
+	q.Add("page", queryParams.Get("page"))
+	q.Add("size", queryParams.Get("size"))
+	req.URL.RawQuery = q.Encode()
+	fmt.Println(req.URL.String())
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic("client: error making http request\n")
 	}
+
+	data := &objects.PaginationResponse{}
+	body, _ := ioutil.ReadAll(resp.Body)
+	json.Unmarshal(body, data)
 
 	responses.JsonSuccess(w, data)
 }
