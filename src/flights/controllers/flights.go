@@ -24,12 +24,12 @@ func (ctrl *filghtCtrl) getAll(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
 	page, _ := strconv.Atoi(queryParams.Get("page"))
 	page_size, _ := strconv.Atoi(queryParams.Get("size"))
-	items := ctrl.model.GetAll()
+	items := ctrl.model.GetAll(page, page_size)
 
 	data := &objects.PaginationResponse{
 		Page:          page,
 		PageSize:      page_size,
-		TotalElements: 1,
+		TotalElements: len(items),
 		Items:         objects.ToFilghtResponses(items),
 	}
 

@@ -8,7 +8,7 @@ import (
 )
 
 type FlightsRep interface {
-	GetAll() []objects.Flight
+	GetAll(page int, page_size int) []objects.Flight
 	Find(id int) (*objects.Flight, error)
 }
 
@@ -20,9 +20,17 @@ func NewPGFlightsRep(db *gorm.DB) *PGFlightsRep {
 	return &PGFlightsRep{db}
 }
 
-func (rep *PGFlightsRep) GetAll() []objects.Flight {
+func paginate(page int, page_size int) func (*gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		offet := (page - 1) * page_size
+		return db.Offset(offet).Limit(page_size)
+	}
+}
+
+func (rep *PGFlightsRep) GetAll(page int, page_size int) []objects.Flight {
 	temp := []objects.Flight{}
 	rep.db.
+		Scopes(paginate(page, page_size)).
 		Model(&objects.Flight{}).
 		Preload("FromAirport").
 		Preload("ToAirport").

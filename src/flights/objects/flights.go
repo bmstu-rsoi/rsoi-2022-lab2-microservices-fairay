@@ -5,7 +5,7 @@ import (
 )
 
 type Airport struct {
-	Id      int    `json:"id" gorm:"primary_key"`
+	Id      int    `json:"id" gorm:"primary_key;index"`
 	Name    string `json:"name"`
 	City    string `json:"city"`
 	Country string `json:"country"`
@@ -16,14 +16,14 @@ func (Airport) TableName() string {
 }
 
 type Flight struct {
-	Id           int      `json:"id" gorm:"primary_key"`
-	FlightNumber string   `json:"flightNumber"`
-	Datetime     string   `json:"datetime"`
-	FromAirport  Airport  `json:"fromAirport" gorm:"foreignKey:FromAirportID"`
-	ToAirport    Airport  `json:"toAirport" gorm:"foreignKey:ToAirportID"`
-	FromAirportID int
-	ToAirportID	  int 
-	Price        int      `json:"price"`
+	Id           	int    	`json:"id" gorm:"primary_key;index"`
+	FlightNumber 	string 	`json:"flightNumber"`
+	Datetime     	string 	`json:"datetime"`
+	FromAirport  	Airport	`json:"fromAirport" gorm:"foreignKey:FromAirportID"`
+	ToAirport    	Airport	`json:"toAirport" gorm:"foreignKey:ToAirportID"`
+	FromAirportID 	int		`gorm:"index"`
+	ToAirportID	  	int 	`gorm:"index"`
+	Price        	int    	`json:"price"`
 }
 
 func (Flight) TableName() string {

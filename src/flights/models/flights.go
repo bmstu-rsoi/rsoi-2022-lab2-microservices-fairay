@@ -14,8 +14,8 @@ func NewFlightsM(rep repository.FlightsRep) *FlightsM {
 	return &FlightsM{rep}
 }
 
-func (model *FlightsM) GetAll() []objects.Flight {
-	return model.rep.GetAll()
+func (model *FlightsM) GetAll(page int, page_size int) []objects.Flight {
+	return model.rep.GetAll(page, page_size)
 }
 
 func (model *FlightsM) Find(id int) (*objects.Flight, error) {
