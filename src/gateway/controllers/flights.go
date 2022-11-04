@@ -29,7 +29,6 @@ func (ctrl *filghtCtrl) get(w http.ResponseWriter, r *http.Request) {
 	q.Add("page", queryParams.Get("page"))
 	q.Add("size", queryParams.Get("size"))
 	req.URL.RawQuery = q.Encode()
-	fmt.Println(req.URL.String())
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {

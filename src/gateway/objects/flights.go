@@ -18,3 +18,16 @@ type PaginationResponse struct {
 	TotalElements int              `json:"totalElements"`
 	Items         []FilghtResponse `json:"items"`
 }
+
+type BalanceHistory struct {
+	Date          string `json:"date"`
+	BalanceDiff   string `json:"balanceDiff"`
+	TicketUid     string `json:"ticketUid"`
+	OperationType string `json:"operationType"`
+}
+
+type PrivilegeInfoResponse struct {
+	Balance string           `json:"balance"`
+	Status  string           `json:"status"`
+	History []BalanceHistory `json:"history"`
+}

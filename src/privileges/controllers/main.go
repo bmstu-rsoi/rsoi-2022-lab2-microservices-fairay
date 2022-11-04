@@ -2,24 +2,27 @@ package controllers
 
 import (
 	"fmt"
-	"gateway/utils"
 	"net/http"
+	"privileges/models"
+	"privileges/utils"
 
 	"github.com/gorilla/mux"
+	"github.com/jinzhu/gorm"
 	"github.com/rs/cors"
 )
 
-func initControllers(r *mux.Router) {
+func initControllers(r *mux.Router, m *models.Models) {
 	r.Use(utils.LogHandler)
 	api1_r := r.PathPrefix("/api/v1/").Subrouter()
 
-	InitFlights(api1_r)
-	InitPrivileges(api1_r)
+	InitPrivileges(api1_r, m.Privileges, m.History)
 }
 
-func InitRouter() *mux.Router {
+func InitRouter(db *gorm.DB) *mux.Router {
 	router := mux.NewRouter()
-	initControllers(router)
+	models := models.InitModels(db)
+
+	initControllers(router, models)
 	return router
 }
 
