@@ -51,3 +51,11 @@ func (model *PrivilegesM) AddTicket(username string, request *objects.AddHistory
 	json.Unmarshal(body, data)
 	return data, nil
 }
+
+func (model *PrivilegesM) DeleteTicket(username string, ticket_uid string) error {
+	req, _ := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/history/%s", utils.Config.PrivilegesEndpoint, ticket_uid), nil)
+	req.Header.Add("X-User-Name", username)
+	client := &http.Client{}
+	_, err := client.Do(req)
+	return err
+}

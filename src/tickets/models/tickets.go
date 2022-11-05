@@ -40,3 +40,7 @@ func (model *TicketsM) Find(ticket_uid string) (*objects.Ticket, error) {
 		return person, nil
 	}
 }
+
+func (model *TicketsM) Delete(ticket_uid string) error {
+	return model.rep.Delete(ticket_uid)
+}

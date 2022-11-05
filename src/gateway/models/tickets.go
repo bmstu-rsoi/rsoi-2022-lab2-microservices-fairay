@@ -131,7 +131,6 @@ func (model *TicketsM) Find(ticket_uid string, username string) (*objects.Ticket
 	if err != nil {
 		return nil, err
 	} else if username != ticket.Username {
-		utils.Logger.Printf("Username %s != %s", username, ticket.Username)
 		return nil, errors.ForbiddenTicket
 	}
 
@@ -141,4 +140,25 @@ func (model *TicketsM) Find(ticket_uid string, username string) (*objects.Ticket
 	} else {
 		return objects.ToTicketResponce(ticket, flight), nil
 	}
+}
+
+func (model *TicketsM) delete(ticket_uid string) error {
+	req, _ := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/tickets/%s", utils.Config.TicketsEndpoint, ticket_uid), nil)
+	_, err := model.client.Do(req)
+	return err
+}
+
+func (model *TicketsM) Delete(ticket_uid string, username string) error {
+	ticket, err := model.find(ticket_uid)
+	if err != nil {
+		return err
+	} else if username != ticket.Username {
+		return errors.ForbiddenTicket
+	}
+
+	if err = model.delete(ticket_uid); err != nil {
+		return err
+	}
+
+	return model.privileges.DeleteTicket(username, ticket_uid)
 }

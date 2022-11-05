@@ -22,6 +22,7 @@ func InitTickets(r *mux.Router, tickets *models.TicketsM) {
 	r.HandleFunc("/tickets", ctrl.fetch).Methods("GET")
 	r.HandleFunc("/tickets", ctrl.post).Methods("POST")
 	r.HandleFunc("/tickets/{ticketUid}", ctrl.get).Methods("GET")
+	r.HandleFunc("/tickets/{ticketUid}", ctrl.delete).Methods("DELETE")
 }
 
 func (ctrl *ticketsCtrl) me(w http.ResponseWriter, r *http.Request) {
@@ -68,6 +69,22 @@ func (ctrl *ticketsCtrl) get(w http.ResponseWriter, r *http.Request) {
 	switch err {
 	case nil:
 		responses.JsonSuccess(w, data)
+	case errors.ForbiddenTicket:
+		responses.Forbidden(w)
+	default:
+		responses.RecordNotFound(w, ticket_uid)
+	}
+}
+
+func (ctrl *ticketsCtrl) delete(w http.ResponseWriter, r *http.Request) {
+	urlParams := mux.Vars(r)
+	ticket_uid := urlParams["ticketUid"]
+	username := r.Header.Get("X-User-Name")
+
+	err := ctrl.tickets.Delete(ticket_uid, username)
+	switch err {
+	case nil:
+		responses.SuccessTicketDeletion(w)
 	case errors.ForbiddenTicket:
 		responses.Forbidden(w)
 	default:

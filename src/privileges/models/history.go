@@ -13,9 +13,13 @@ func NewHistoryM(rep repository.HistoryRep) *HistoryM {
 	return &HistoryM{rep}
 }
 
-func (model *HistoryM) Find(privilege_id int) []objects.PrivilegeHistory {
-	history, _ := model.rep.Find(privilege_id)
+func (model *HistoryM) Fetch(privilege_id int) []objects.PrivilegeHistory {
+	history, _ := model.rep.Fetch(privilege_id)
 	return history
+}
+
+func (model *HistoryM) Find(privilege_id int, ticket_uid string) (*objects.PrivilegeHistory, error) {
+	return model.rep.Find(privilege_id, ticket_uid)
 }
 
 func (model *HistoryM) FillInBalance(privilege_id int, ticket_uid string, balance_diff int) error {

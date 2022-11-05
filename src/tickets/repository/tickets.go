@@ -13,6 +13,7 @@ type TicketsRep interface {
 	FetchUser(username string) []objects.Ticket
 	Create(*objects.Ticket) error
 	Find(ticket_uid string) (*objects.Ticket, error)
+	Delete(ticket_uid string) error
 }
 
 type PGTicketsRep struct {
@@ -63,4 +64,11 @@ func (rep *PGTicketsRep) Find(ticket_uid string) (*objects.Ticket, error) {
 	default:
 		return nil, errors.UnknownError
 	}
+}
+
+func (rep *PGTicketsRep) Delete(ticket_uid string) error {
+	return rep.db.
+		Model(&objects.Ticket{TicketUid: ticket_uid}).
+		Update("status", "CANCELED").
+		Error
 }

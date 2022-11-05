@@ -19,6 +19,7 @@ func InitPrivileges(r *mux.Router, privileges *models.PrivilegesM) {
 	ctrl := &privilegesCtrl{privileges}
 	r.HandleFunc("/privilege", ctrl.get).Methods("GET")
 	r.HandleFunc("/history", ctrl.addTicket).Methods("POST")
+	r.HandleFunc("/history/{ticketUid}", ctrl.deleteTicket).Methods("DELETE")
 }
 
 func (ctrl *privilegesCtrl) get(w http.ResponseWriter, r *http.Request) {
@@ -43,6 +44,20 @@ func (ctrl *privilegesCtrl) addTicket(w http.ResponseWriter, r *http.Request) {
 	switch err {
 	case nil:
 		responses.JsonSuccess(w, data)
+	default:
+		responses.BadRequest(w, err.Error())
+	}
+}
+
+func (ctrl *privilegesCtrl) deleteTicket(w http.ResponseWriter, r *http.Request) {
+	urlParams := mux.Vars(r)
+	ticket_uid := urlParams["ticketUid"]
+	username := r.Header.Get("X-User-Name")
+
+	err := ctrl.privileges.DeleteTicket(username, ticket_uid)
+	switch err {
+	case nil:
+		responses.SuccessTicketDeletion(w)
 	default:
 		responses.BadRequest(w, err.Error())
 	}

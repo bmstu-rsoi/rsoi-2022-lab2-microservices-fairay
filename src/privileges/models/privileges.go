@@ -21,7 +21,7 @@ func (model *PrivilegesM) Find(username string) (*objects.Privilege, []objects.P
 	if err != nil {
 		return nil, nil, err
 	}
-	history := model.history.Find(privilege.Id)
+	history := model.history.Fetch(privilege.Id)
 	return privilege, history, nil
 }
 
@@ -61,4 +61,32 @@ func (model *PrivilegesM) AddTicket(username string, info *objects.AddTicketRequ
 		resp.Privilege.Status = privilege.Status
 		return resp, nil
 	}
+}
+
+func (model *PrivilegesM) DeleteTicket(username string, ticket_uid string) error {
+	privilege, err := model.rep.Find(username)
+	if err != nil {
+		return err
+	}
+
+	history_entry, err := model.history.Find(privilege.Id, ticket_uid)
+	if err != nil {
+		return err
+	}
+
+	balance_diff := -history_entry.BalanceDiff
+	if balance_diff < 0 {
+		if balance_diff+privilege.Balance < 0 {
+			balance_diff = -privilege.Balance
+		}
+		err = model.history.DebitTheAccount(privilege.Id, ticket_uid, balance_diff)
+	} else {
+		err = model.history.FillInBalance(privilege.Id, ticket_uid, balance_diff)
+	}
+	if err != nil {
+		return err
+	}
+
+	privilege.Balance += balance_diff
+	return model.rep.Update(privilege)
 }

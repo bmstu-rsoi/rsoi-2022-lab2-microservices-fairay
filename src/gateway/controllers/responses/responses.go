@@ -71,10 +71,10 @@ func SuccessPersonCreation(w http.ResponseWriter, person_id int) {
 	successCreation(w, location)
 }
 
-func SuccessPersonDeletion(w http.ResponseWriter, person_id int) {
+func SuccessTicketDeletion(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
 	w.WriteHeader(http.StatusNoContent)
-	json.NewEncoder(w).Encode(fmt.Sprintf("Person for ID %d was removed", person_id))
+	json.NewEncoder(w).Encode("Возврат билета успешно выполнен")
 }
 
 func SuccessPersonUpdate(w http.ResponseWriter, person_id int) {

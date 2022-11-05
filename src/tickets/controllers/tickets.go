@@ -21,6 +21,7 @@ func InitTickets(r *mux.Router, model *models.TicketsM) {
 	r.HandleFunc("/tickets", ctrl.fetch).Methods("GET")
 	r.HandleFunc("/tickets", ctrl.create).Methods("POST")
 	r.HandleFunc("/tickets/{ticketUid}", ctrl.get).Methods("GET")
+	r.HandleFunc("/tickets/{ticketUid}", ctrl.delete).Methods("DELETE")
 }
 
 func (ctrl *filghtCtrl) fetch(w http.ResponseWriter, r *http.Request) {
@@ -44,6 +45,20 @@ func (ctrl *filghtCtrl) get(w http.ResponseWriter, r *http.Request) {
 	switch err {
 	case nil:
 		responses.JsonSuccess(w, data)
+	case errors.RecordNotFound:
+		responses.RecordNotFound(w, ticket_uid)
+	default:
+		responses.InternalError(w)
+	}
+}
+
+func (ctrl *filghtCtrl) delete(w http.ResponseWriter, r *http.Request) {
+	urlParams := mux.Vars(r)
+	ticket_uid := urlParams["ticketUid"]
+
+	switch ctrl.model.Delete(ticket_uid) {
+	case nil:
+		responses.SuccessTicketDeletion(w)
 	case errors.RecordNotFound:
 		responses.RecordNotFound(w, ticket_uid)
 	default:
