@@ -66,19 +66,8 @@ func successCreation(w http.ResponseWriter, location string) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func SuccessPersonCreation(w http.ResponseWriter, person_id int) {
-	location := fmt.Sprintf("/api/v1/persons/%d", person_id)
-	successCreation(w, location)
-}
-
 func SuccessTicketDeletion(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
 	w.WriteHeader(http.StatusNoContent)
 	json.NewEncoder(w).Encode("Возврат билета успешно выполнен")
-}
-
-func SuccessPersonUpdate(w http.ResponseWriter, person_id int) {
-	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
-	w.WriteHeader(http.StatusNoContent)
-	json.NewEncoder(w).Encode(fmt.Sprintf("Person for ID %d was removed", person_id))
 }

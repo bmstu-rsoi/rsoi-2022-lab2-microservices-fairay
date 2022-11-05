@@ -33,11 +33,11 @@ func (model *TicketsM) Create(username string, flight_number string, price int) 
 }
 
 func (model *TicketsM) Find(ticket_uid string) (*objects.Ticket, error) {
-	person, err := model.rep.Find(ticket_uid)
+	ticket, err := model.rep.Find(ticket_uid)
 	if err != nil {
 		return nil, errors.RecordNotFound
 	} else {
-		return person, nil
+		return ticket, nil
 	}
 }
 

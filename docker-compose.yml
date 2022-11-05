@@ -23,6 +23,7 @@ services:
       - postgres
     links: 
       - postgres
+    restart: on-failure
 
   flights:
     build:
@@ -33,6 +34,7 @@ services:
       - postgres
     links: 
       - postgres
+    restart: on-failure
   
   tickets:
     build:
@@ -43,6 +45,7 @@ services:
       - postgres
     links: 
       - postgres
+    restart: on-failure
 
   gateway:
     build:
