@@ -1,38 +1,24 @@
 package controllers
 
 import (
-	"fmt"
 	"gateway/controllers/responses"
-	"gateway/objects"
-	"gateway/utils"
-	"io/ioutil"
+	"gateway/models"
 
-	"encoding/json"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
 type privilegeCtrl struct {
+	privileges *models.PrivilegesM
 }
 
-func InitPrivileges(r *mux.Router) {
-	ctrl := &privilegeCtrl{}
-	r.HandleFunc("/privilege", ctrl.get).Methods("GET")
+func InitPrivileges(r *mux.Router, privileges *models.PrivilegesM) {
+	ctrl := &privilegeCtrl{privileges}
+	r.HandleFunc("/privilege", ctrl.fetch).Methods("GET")
 }
 
-func (ctrl *privilegeCtrl) get(w http.ResponseWriter, r *http.Request) {
-	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/privilege", utils.Config.PrivilegesEndpoint), nil)
-	req.Header.Add("X-User-Name", r.Header.Get("X-User-Name"))
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic("client: error making http request\n")
-	}
-
-	data := &objects.PrivilegeInfoResponse{}
-	body, _ := ioutil.ReadAll(resp.Body)
-	json.Unmarshal(body, data)
-
+func (ctrl *privilegeCtrl) fetch(w http.ResponseWriter, r *http.Request) {
+	data := ctrl.privileges.Fetch(r.Header.Get("X-User-Name"))
 	responses.JsonSuccess(w, data)
 }

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"gateway/models"
 	"gateway/utils"
 	"net/http"
 
@@ -9,17 +10,20 @@ import (
 	"github.com/rs/cors"
 )
 
-func initControllers(r *mux.Router) {
+func initControllers(r *mux.Router, models *models.Models) {
 	r.Use(utils.LogHandler)
 	api1_r := r.PathPrefix("/api/v1/").Subrouter()
 
-	InitFlights(api1_r)
-	InitPrivileges(api1_r)
+	InitFlights(api1_r, models.Flights)
+	InitPrivileges(api1_r, models.Privileges)
+	InitTickets(api1_r, models.Flights)
 }
 
 func InitRouter() *mux.Router {
 	router := mux.NewRouter()
-	initControllers(router)
+	models := models.InitModels()
+
+	initControllers(router, models)
 	return router
 }
 

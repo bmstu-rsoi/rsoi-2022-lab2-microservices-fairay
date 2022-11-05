@@ -6,10 +6,19 @@ import (
 	"net/http"
 )
 
-type validationErrors struct{}
+type ErrorDescription struct {
+	Field		string				`json:"filed"`
+	Error		string				`json:"error"`
+}
 type validationErrorResponse struct {
-	Message string           `json:"message"`
-	Errors  validationErrors `json:"errors"`
+	Message 	string           	`json:"message"`
+	Errors  	[]ErrorDescription	`json:"errors"`
+}
+
+func InternalError(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
+	w.WriteHeader(http.StatusInternalServerError)
+	json.NewEncoder(w).Encode("Internal error")
 }
 
 func BadRequest(w http.ResponseWriter, msg string) {
@@ -18,11 +27,11 @@ func BadRequest(w http.ResponseWriter, msg string) {
 	json.NewEncoder(w).Encode(msg)
 }
 
-func ValidationErrorResponse(w http.ResponseWriter) {
+func ValidationErrorResponse(w http.ResponseWriter, message string) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusBadRequest)
 
-	resp := &validationErrorResponse{"Request validation failed", validationErrors{}}
+	resp := &validationErrorResponse{message, []ErrorDescription{}}
 	json.NewEncoder(w).Encode(resp)
 }
 

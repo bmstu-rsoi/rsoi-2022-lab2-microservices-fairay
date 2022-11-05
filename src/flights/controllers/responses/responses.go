@@ -12,6 +12,12 @@ type validationErrorResponse struct {
 	Errors  validationErrors `json:"errors"`
 }
 
+func InternalError(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
+	w.WriteHeader(http.StatusInternalServerError)
+	json.NewEncoder(w).Encode("Internal error")
+}
+
 func BadRequest(w http.ResponseWriter, msg string) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusBadRequest)

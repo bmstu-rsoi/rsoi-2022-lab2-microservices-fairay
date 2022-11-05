@@ -9,7 +9,7 @@ import (
 
 type FlightsRep interface {
 	GetAll(page int, page_size int) []objects.Flight
-	Find(id int) (*objects.Flight, error)
+	Find(flight_number string) (*objects.Flight, error)
 }
 
 type PGFlightsRep struct {
@@ -39,9 +39,14 @@ func (rep *PGFlightsRep) GetAll(page int, page_size int) []objects.Flight {
 	return temp
 }
 
-func (rep *PGFlightsRep) Find(id int) (*objects.Flight, error) {
+func (rep *PGFlightsRep) Find(flight_number string) (*objects.Flight, error) {
 	temp := new(objects.Flight)
-	err := rep.db.Where("id = ?", id).First(temp).Error
+	err := rep.db.
+		Where(&objects.Flight{FlightNumber: flight_number}).
+		Preload("FromAirport").
+		Preload("ToAirport").
+		First(temp).
+		Error
 	switch err {
 	case nil:
 		break

@@ -18,8 +18,8 @@ func (model *FlightsM) GetAll(page int, page_size int) []objects.Flight {
 	return model.rep.GetAll(page, page_size)
 }
 
-func (model *FlightsM) Find(id int) (*objects.Flight, error) {
-	person, err := model.rep.Find(id)
+func (model *FlightsM) Find(flight_number string) (*objects.Flight, error) {
+	person, err := model.rep.Find(flight_number)
 	if err != nil {
 		return nil, errors.RecordNotFound
 	} else {

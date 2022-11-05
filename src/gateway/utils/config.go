@@ -4,6 +4,7 @@ type Configuration struct {
 	LogFile         string `json:"log_file"`
 	Port            uint16 `json:"port"`
 	FlightsEndpoint string `json:"flights-endpoint"`
+	TicketsEndpoint string `json:"tickets-endpoint"`
 	PrivilegesEndpoint string `json:"privileges-endpoint"`
 }
 
@@ -18,6 +19,7 @@ func InitConfig() {
 		8080,
 
 		"http://flights:8080",
+		"http://tickets:8080",
 		"http://privileges:8080",
 	}
 }

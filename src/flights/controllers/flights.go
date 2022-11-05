@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"flights/controllers/responses"
+	"flights/errors"
 	"flights/models"
 	"flights/objects"
 
@@ -18,6 +19,7 @@ type filghtCtrl struct {
 func InitFlights(r *mux.Router, model *models.FlightsM) {
 	ctrl := &filghtCtrl{model}
 	r.HandleFunc("/flights", ctrl.getAll).Methods("GET")
+	r.HandleFunc("/flights/{flightNumber}", ctrl.get).Methods("GET")
 }
 
 func (ctrl *filghtCtrl) getAll(w http.ResponseWriter, r *http.Request) {
@@ -34,4 +36,19 @@ func (ctrl *filghtCtrl) getAll(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responses.JsonSuccess(w, data)
+}
+
+func (ctrl *filghtCtrl) get(w http.ResponseWriter, r *http.Request) {
+	urlParams := mux.Vars(r)
+	flight_number := urlParams["flightNumber"]
+
+	data, err := ctrl.model.Find(flight_number)
+	switch err {
+	case nil:
+		responses.JsonSuccess(w, data.ToFilghtResponse())
+	case errors.RecordNotFound:
+		responses.RecordNotFound(w, flight_number)
+	default:
+		responses.InternalError(w)
+	}
 }

@@ -1,43 +1,28 @@
 package controllers
 
 import (
-	"fmt"
 	"gateway/controllers/responses"
-	"gateway/objects"
-	"gateway/utils"
-	"io/ioutil"
+	"gateway/models"
+	"strconv"
 
-	"encoding/json"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
 type filghtCtrl struct {
+	flights *models.FlightsM
 }
 
-func InitFlights(r *mux.Router) {
-	ctrl := &filghtCtrl{}
-	r.HandleFunc("/flights", ctrl.get).Methods("GET")
+func InitFlights(r *mux.Router, flights *models.FlightsM) {
+	ctrl := &filghtCtrl{flights}
+	r.HandleFunc("/flights", ctrl.fetch).Methods("GET")
 }
 
-func (ctrl *filghtCtrl) get(w http.ResponseWriter, r *http.Request) {
+func (ctrl *filghtCtrl) fetch(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
-
-	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/flights", utils.Config.FlightsEndpoint), nil)
-	q := req.URL.Query()
-	q.Add("page", queryParams.Get("page"))
-	q.Add("size", queryParams.Get("size"))
-	req.URL.RawQuery = q.Encode()
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic("client: error making http request\n")
-	}
-
-	data := &objects.PaginationResponse{}
-	body, _ := ioutil.ReadAll(resp.Body)
-	json.Unmarshal(body, data)
-
+	page, _ := strconv.Atoi(queryParams.Get("page"))
+	page_size, _ := strconv.Atoi(queryParams.Get("size"))
+	data := ctrl.flights.Fetch(page, page_size)
 	responses.JsonSuccess(w, data)
 }
