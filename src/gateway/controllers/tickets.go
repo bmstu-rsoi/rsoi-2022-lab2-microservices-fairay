@@ -18,9 +18,20 @@ type ticketsCtrl struct {
 
 func InitTickets(r *mux.Router, tickets *models.TicketsM) {
 	ctrl := &ticketsCtrl{tickets: tickets}
+	r.HandleFunc("/me", ctrl.me).Methods("GET")
 	r.HandleFunc("/tickets", ctrl.fetch).Methods("GET")
 	r.HandleFunc("/tickets", ctrl.post).Methods("POST")
 	r.HandleFunc("/tickets/{ticketUid}", ctrl.get).Methods("GET")
+}
+
+func (ctrl *ticketsCtrl) me(w http.ResponseWriter, r *http.Request) {
+	username := r.Header.Get("X-User-Name")
+	data, err := ctrl.tickets.FetchUser(username)
+	if err != nil {
+		responses.InternalError(w)
+	} else {
+		responses.JsonSuccess(w, data)
+	}
 }
 
 func (ctrl *ticketsCtrl) fetch(w http.ResponseWriter, r *http.Request) {

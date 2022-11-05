@@ -9,7 +9,8 @@ import (
 )
 
 type TicketsRep interface {
-	Fetch() []objects.Ticket
+	FetchAll() []objects.Ticket
+	FetchUser(username string) []objects.Ticket
 	Create(*objects.Ticket) error
 	Find(ticket_uid string) (*objects.Ticket, error)
 }
@@ -22,10 +23,20 @@ func NewPGTicketsRep(db *gorm.DB) *PGTicketsRep {
 	return &PGTicketsRep{db}
 }
 
-func (rep *PGTicketsRep) Fetch() []objects.Ticket {
+func (rep *PGTicketsRep) FetchAll() []objects.Ticket {
 	temp := []objects.Ticket{}
 	rep.db.
 		Model(&objects.Ticket{}).
+		Find(&temp)
+
+	return temp
+}
+
+func (rep *PGTicketsRep) FetchUser(username string) []objects.Ticket {
+	temp := []objects.Ticket{}
+	rep.db.
+		Model(&objects.Ticket{}).
+		Where(&objects.Ticket{Username: username}).
 		Find(&temp)
 
 	return temp

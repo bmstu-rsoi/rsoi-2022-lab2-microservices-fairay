@@ -25,8 +25,28 @@ func NewTicketsM(client *http.Client, flights *FlightsM) *TicketsM {
 	}
 }
 
-func (model *TicketsM) fetch() (objects.TicketArr, error) {
+func (model *TicketsM) FetchUser(username string) (*objects.UserInfoResponse, error) {
+	data := new(objects.UserInfoResponse)
+	tickets, err := model.fetch(username)
+	if err != nil {
+		return nil, err
+	}
+	flights := model.flights.Fetch(1, 100).Items
+	data.Tickets = objects.MakeTicketResponseArr(tickets, flights)
+
+	privilege := model.privileges.Fetch(username)
+	data.Privilege = objects.PrivilegeShortInfo{
+		Balance: privilege.Balance,
+		Status:  privilege.Status,
+	}
+	return data, nil
+}
+
+func (model *TicketsM) fetch(username string) (objects.TicketArr, error) {
 	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/tickets", utils.Config.TicketsEndpoint), nil)
+	if username != "" {
+		req.Header.Set("X-User-Name", username)
+	}
 	resp, err := model.client.Do(req)
 	if err != nil {
 		return nil, err
@@ -43,7 +63,7 @@ func (model *TicketsM) fetch() (objects.TicketArr, error) {
 }
 
 func (model *TicketsM) Fetch() ([]objects.TicketResponse, error) {
-	tickets, err := model.fetch()
+	tickets, err := model.fetch("")
 	if err != nil {
 		return nil, err
 	}

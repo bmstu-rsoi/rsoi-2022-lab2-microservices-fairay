@@ -24,7 +24,7 @@ func InitTickets(r *mux.Router, model *models.TicketsM) {
 }
 
 func (ctrl *filghtCtrl) fetch(w http.ResponseWriter, r *http.Request) {
-	data := ctrl.model.Fetch()
+	data := ctrl.model.Fetch(r.Header.Get("X-User-Name"))
 	responses.JsonSuccess(w, data)
 }
 

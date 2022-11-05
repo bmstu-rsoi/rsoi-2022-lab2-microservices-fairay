@@ -14,8 +14,12 @@ func NewTicketsM(rep repository.TicketsRep) *TicketsM {
 	return &TicketsM{rep}
 }
 
-func (model *TicketsM) Fetch() []objects.Ticket {
-	return model.rep.Fetch()
+func (model *TicketsM) Fetch(username string) []objects.Ticket {
+	if username != "" {
+		return model.rep.FetchUser(username)
+	} else {
+		return model.rep.FetchAll()
+	}
 }
 
 func (model *TicketsM) Create(username string, flight_number string, price int) (*objects.Ticket, error) {
