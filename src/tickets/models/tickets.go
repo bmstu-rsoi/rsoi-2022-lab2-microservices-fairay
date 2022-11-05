@@ -16,9 +16,9 @@ func NewTicketsM(rep repository.TicketsRep) *TicketsM {
 
 func (model *TicketsM) Create(user_name string, flight_number string, price int) (*objects.Ticket, error) {
 	ticket := &objects.Ticket{
-		Username: user_name,
+		Username:     user_name,
 		FlightNumber: flight_number,
-		Price: price,
+		Price:        price,
 	}
 	err := model.rep.Create(ticket)
 	return ticket, err

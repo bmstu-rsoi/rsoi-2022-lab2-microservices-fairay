@@ -9,6 +9,7 @@ import (
 
 type PrivilegesRep interface {
 	Find(username string) (*objects.Privilege, error)
+	Update(*objects.Privilege) error
 }
 
 type PGPrivilegesRep struct {
@@ -21,7 +22,10 @@ func NewPGPrivilegesRep(db *gorm.DB) *PGPrivilegesRep {
 
 func (rep *PGPrivilegesRep) Find(username string) (*objects.Privilege, error) {
 	temp := new(objects.Privilege)
-	err := rep.db.Where(objects.Privilege{Username: username}).First(temp).Error
+	err := rep.db.
+		Where(objects.Privilege{Username: username}).
+		First(temp).
+		Error
 	switch err {
 	case nil:
 		break
@@ -32,4 +36,10 @@ func (rep *PGPrivilegesRep) Find(username string) (*objects.Privilege, error) {
 	}
 
 	return temp, err
+}
+
+func (rep *PGPrivilegesRep) Update(privilege *objects.Privilege) error {
+	return rep.db.
+		Save(privilege).
+		Error
 }

@@ -16,14 +16,14 @@ func (Airport) TableName() string {
 }
 
 type Flight struct {
-	Id           	int    	`json:"id" gorm:"primary_key;index"`
-	FlightNumber 	string 	`json:"flightNumber"`
-	Datetime     	string 	`json:"datetime"`
-	FromAirport  	Airport	`json:"fromAirport" gorm:"foreignKey:FromAirportID"`
-	ToAirport    	Airport	`json:"toAirport" gorm:"foreignKey:ToAirportID"`
-	FromAirportID 	int		`gorm:"index"`
-	ToAirportID	  	int 	`gorm:"index"`
-	Price        	int    	`json:"price"`
+	Id            int     `json:"id" gorm:"primary_key;index"`
+	FlightNumber  string  `json:"flightNumber"`
+	Datetime      string  `json:"datetime"`
+	FromAirport   Airport `json:"fromAirport" gorm:"foreignKey:FromAirportID"`
+	ToAirport     Airport `json:"toAirport" gorm:"foreignKey:ToAirportID"`
+	FromAirportID int     `gorm:"index"`
+	ToAirportID   int     `gorm:"index"`
+	Price         int     `json:"price"`
 }
 
 func (Flight) TableName() string {
@@ -31,7 +31,7 @@ func (Flight) TableName() string {
 }
 
 func (flight *Flight) ToFilghtResponse() *FilghtResponse {
-	return &FilghtResponse {
+	return &FilghtResponse{
 		flight.FlightNumber,
 		fmt.Sprintf("%s %s", flight.FromAirport.City, flight.FromAirport.Name),
 		fmt.Sprintf("%s %s", flight.ToAirport.City, flight.ToAirport.Name),

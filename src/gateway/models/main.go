@@ -5,7 +5,7 @@ import "net/http"
 type Models struct {
 	Flights    *FlightsM
 	Privileges *PrivilegesM
-	Tickets *TicketsM
+	Tickets    *TicketsM
 }
 
 func InitModels() *Models {

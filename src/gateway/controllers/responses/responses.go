@@ -7,12 +7,12 @@ import (
 )
 
 type ErrorDescription struct {
-	Field		string				`json:"filed"`
-	Error		string				`json:"error"`
+	Field string `json:"filed"`
+	Error string `json:"error"`
 }
 type validationErrorResponse struct {
-	Message 	string           	`json:"message"`
-	Errors  	[]ErrorDescription	`json:"errors"`
+	Message string             `json:"message"`
+	Errors  []ErrorDescription `json:"errors"`
 }
 
 func InternalError(w http.ResponseWriter) {

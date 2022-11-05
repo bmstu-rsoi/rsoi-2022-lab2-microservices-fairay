@@ -15,7 +15,7 @@ func initControllers(r *mux.Router, m *models.Models) {
 	r.Use(utils.LogHandler)
 	api1_r := r.PathPrefix("/api/v1/").Subrouter()
 
-	InitPrivileges(api1_r, m.Privileges, m.History)
+	InitPrivileges(api1_r, m.Privileges)
 }
 
 func InitRouter(db *gorm.DB) *mux.Router {

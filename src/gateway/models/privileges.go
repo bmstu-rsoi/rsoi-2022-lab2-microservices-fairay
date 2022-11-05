@@ -1,6 +1,7 @@
 package models
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"gateway/objects"
@@ -17,9 +18,9 @@ func NewPrivilegesM(client *http.Client) *PrivilegesM {
 	return &PrivilegesM{client: client}
 }
 
-func (model *PrivilegesM) Fetch(user_name string) *objects.PrivilegeInfoResponse {
+func (model *PrivilegesM) Fetch(username string) *objects.PrivilegeInfoResponse {
 	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/privilege", utils.Config.PrivilegesEndpoint), nil)
-	req.Header.Add("X-User-Name", user_name)
+	req.Header.Add("X-User-Name", username)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -30,4 +31,23 @@ func (model *PrivilegesM) Fetch(user_name string) *objects.PrivilegeInfoResponse
 	body, _ := ioutil.ReadAll(resp.Body)
 	json.Unmarshal(body, data)
 	return data
+}
+
+func (model *PrivilegesM) AddTicket(username string, request *objects.AddHistoryRequest) (*objects.AddHistoryResponce, error) {
+	req_body, _ := json.Marshal(request)
+	req, _ := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/history", utils.Config.PrivilegesEndpoint), bytes.NewBuffer(req_body))
+	req.Header.Add("X-User-Name", username)
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	data := &objects.AddHistoryResponce{}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	json.Unmarshal(body, data)
+	return data, nil
 }

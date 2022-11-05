@@ -20,7 +20,7 @@ func NewPGFlightsRep(db *gorm.DB) *PGFlightsRep {
 	return &PGFlightsRep{db}
 }
 
-func paginate(page int, page_size int) func (*gorm.DB) *gorm.DB {
+func paginate(page int, page_size int) func(*gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		offet := (page - 1) * page_size
 		return db.Offset(offet).Limit(page_size)

@@ -11,8 +11,10 @@ import (
 )
 
 type TicketsM struct {
-	client  *http.Client
-	flights *FlightsM
+	client *http.Client
+
+	flights    *FlightsM
+	privileges *PrivilegesM
 }
 
 func NewTicketsM(client *http.Client, flights *FlightsM) *TicketsM {
@@ -36,7 +38,7 @@ func (model *TicketsM) create(flight_number string, price int) (*objects.TicketC
 	}
 }
 
-func (model *TicketsM) Create(flight_number string, user_name string, price int, from_balance bool) (*objects.TicketPurchaseResponse, error) {
+func (model *TicketsM) Create(flight_number string, username string, price int, from_balance bool) (*objects.TicketPurchaseResponse, error) {
 	flight, err := model.flights.Find(flight_number)
 	if err != nil {
 		utils.Logger.Println(err.Error())
@@ -49,5 +51,15 @@ func (model *TicketsM) Create(flight_number string, user_name string, price int,
 		return nil, err
 	}
 
-	return objects.NewTicketPurchaseResponse(flight, ticket), nil
+	privilege, err := model.privileges.AddTicket(username, &objects.AddHistoryRequest{
+		TicketUID:       ticket.TicketUid,
+		Price:           flight.Price,
+		PaidFromBalance: from_balance,
+	})
+	if err != nil {
+		utils.Logger.Println(err.Error())
+		return nil, err
+	}
+
+	return objects.NewTicketPurchaseResponse(flight, ticket, privilege), nil
 }

@@ -31,12 +31,12 @@ func initDBConnection(cnf utils.DBConfiguration) *gorm.DB {
 	db.AutoMigrate(&objects.Flight{})
 
 	flight := &objects.Flight{
-		Id: 1, 
-		FlightNumber: "AFL031", 
-		Datetime: "2021-10-08 20:00", 
-		FromAirport: objects.Airport{Id: 2, Name: "Пулково", City: "Санкт-Петербург", Country: "Россия"},
-		ToAirport: objects.Airport{Id: 1, Name: "Шереметьево", City: "Москва", Country: "Россия"}, 
-		Price: 1500,
+		Id:           1,
+		FlightNumber: "AFL031",
+		Datetime:     "2021-10-08 20:00",
+		FromAirport:  objects.Airport{Id: 2, Name: "Пулково", City: "Санкт-Петербург", Country: "Россия"},
+		ToAirport:    objects.Airport{Id: 1, Name: "Шереметьево", City: "Москва", Country: "Россия"},
+		Price:        1500,
 	}
 	db.FirstOrCreate(flight)
 

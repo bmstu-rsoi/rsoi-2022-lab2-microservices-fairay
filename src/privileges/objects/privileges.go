@@ -1,7 +1,5 @@
 package objects
 
-import "fmt"
-
 type Privilege struct {
 	Id       int    `json:"id" gorm:"primary_key;index"`
 	Username string `json:"username" gorm:"not null;unique"`
@@ -14,12 +12,12 @@ func (Privilege) TableName() string {
 }
 
 type PrivilegeShortInfo struct {
-	Balance string `json:"balance"`
+	Balance int    `json:"balance"`
 	Status  string `json:"status"`
 }
 
 type PrivilegeInfoResponse struct {
-	Balance string           `json:"balance"`
+	Balance int              `json:"balance"`
 	Status  string           `json:"status"`
 	History []BalanceHistory `json:"history"`
 }
@@ -31,7 +29,7 @@ func ToPrivilegeInfoResponse(privilege *Privilege, history []PrivilegeHistory) *
 	}
 
 	return &PrivilegeInfoResponse{
-		fmt.Sprintf("%d", privilege.Balance),
+		privilege.Balance,
 		privilege.Status,
 		balance_history,
 	}
