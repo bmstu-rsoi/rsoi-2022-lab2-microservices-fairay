@@ -9,6 +9,7 @@ import (
 )
 
 type TicketsRep interface {
+	Fetch() []objects.Ticket
 	Create(*objects.Ticket) error
 	Find(ticket_uid string) (*objects.Ticket, error)
 }
@@ -19,6 +20,15 @@ type PGTicketsRep struct {
 
 func NewPGTicketsRep(db *gorm.DB) *PGTicketsRep {
 	return &PGTicketsRep{db}
+}
+
+func (rep *PGTicketsRep) Fetch() []objects.Ticket {
+	temp := []objects.Ticket{}
+	rep.db.
+		Model(&objects.Ticket{}).
+		Find(&temp)
+
+	return temp
 }
 
 func (rep *PGTicketsRep) Create(ticket *objects.Ticket) error {

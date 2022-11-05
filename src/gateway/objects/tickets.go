@@ -58,6 +58,7 @@ type Ticket struct {
 	Price        int    `json:"price"`
 	Status       string `json:"status"`
 }
+type TicketArr []Ticket
 
 type TicketResponse struct {
 	TicketUid    string `json:"ticketUid"`
@@ -67,6 +68,29 @@ type TicketResponse struct {
 	Date         string `json:"date"`
 	Price        int    `json:"price"`
 	Status       string `json:"status"`
+}
+
+func MakeTicketResponseArr(tickets []Ticket, flights []FlightResponse) []TicketResponse {
+	flight_map := make(map[string]FlightResponse)
+	for _, v := range flights {
+		flight_map[v.FlightNumber] = v
+	}
+
+	data := make([]TicketResponse, len(tickets))
+	for k, v := range tickets {
+		flight := flight_map[v.FlightNumber]
+
+		data[k] = TicketResponse{
+			TicketUid:    v.TicketUid,
+			FlightNumber: v.FlightNumber,
+			FromAirport:  flight.FromAirport,
+			ToAirport:    flight.ToAirport,
+			Date:         flight.Date,
+			Price:        v.Price,
+			Status:       v.Status,
+		}
+	}
+	return data
 }
 
 func ToTicketResponce(ticket *Ticket, flight *FlightResponse) *TicketResponse {

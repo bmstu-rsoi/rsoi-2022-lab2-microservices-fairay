@@ -23,10 +23,6 @@ func (model *FlightsM) Fetch(page int, page_size int) *objects.PaginationRespons
 	q.Add("page", fmt.Sprintf("%d", page))
 	q.Add("size", fmt.Sprintf("%d", page_size))
 	req.URL.RawQuery = q.Encode()
-	if model.client == nil {
-		panic("client: nil\n")
-	}
-
 	resp, err := model.client.Do(req)
 	if err != nil {
 		panic("client: error making http request\n")

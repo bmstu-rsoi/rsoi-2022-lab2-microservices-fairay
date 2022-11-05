@@ -25,6 +25,33 @@ func NewTicketsM(client *http.Client, flights *FlightsM) *TicketsM {
 	}
 }
 
+func (model *TicketsM) fetch() (objects.TicketArr, error) {
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/tickets", utils.Config.TicketsEndpoint), nil)
+	resp, err := model.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	data := new(objects.TicketArr)
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	json.Unmarshal(body, data)
+	return *data, nil
+}
+
+func (model *TicketsM) Fetch() ([]objects.TicketResponse, error) {
+	tickets, err := model.fetch()
+	if err != nil {
+		return nil, err
+	}
+
+	flights := model.flights.Fetch(1, 100).Items
+	return objects.MakeTicketResponseArr(tickets, flights), nil
+}
+
 func (model *TicketsM) create(flight_number string, price int, username string) (*objects.TicketCreateResponse, error) {
 	req_body, _ := json.Marshal(&objects.TicketCreateRequest{FlightNumber: flight_number, Price: price})
 	req, _ := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/tickets", utils.Config.TicketsEndpoint), bytes.NewBuffer(req_body))
