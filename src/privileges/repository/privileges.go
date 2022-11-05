@@ -28,14 +28,12 @@ func (rep *PGPrivilegesRep) Find(username string) (*objects.Privilege, error) {
 		Error
 	switch err {
 	case nil:
-		break
+		return temp, err
 	case gorm.ErrRecordNotFound:
-		temp, err = nil, errors.RecordNotFound
+		return nil, errors.RecordNotFound
 	default:
-		temp, err = nil, errors.UnknownError
+		return nil, errors.UnknownError
 	}
-
-	return temp, err
 }
 
 func (rep *PGPrivilegesRep) Update(privilege *objects.Privilege) error {

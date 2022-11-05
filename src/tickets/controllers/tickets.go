@@ -19,7 +19,7 @@ type filghtCtrl struct {
 func InitTickets(r *mux.Router, model *models.TicketsM) {
 	ctrl := &filghtCtrl{model}
 	r.HandleFunc("/tickets", ctrl.create).Methods("POST")
-	r.HandleFunc("/tickets/{ticketNumber}", ctrl.get).Methods("GET")
+	r.HandleFunc("/tickets/{ticketUid}", ctrl.get).Methods("GET")
 }
 
 func (ctrl *filghtCtrl) create(w http.ResponseWriter, r *http.Request) {

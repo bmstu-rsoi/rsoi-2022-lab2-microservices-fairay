@@ -16,6 +16,7 @@ type TicketPurchaseResponse struct {
 	FromAirport   string             `json:"fromAirport"`
 	ToAirport     string             `json:"toAirport"`
 	Date          string             `json:"date"`
+	Status        string             `json:"status"`
 	Price         int                `json:"price"`
 	PaidByMoney   int                `json:"paidByMoney"`
 	PaidByBonuses int                `json:"paidByBonuses"`
@@ -29,6 +30,7 @@ func NewTicketPurchaseResponse(flight *FlightResponse, ticket *TicketCreateRespo
 		FromAirport:   flight.FromAirport,
 		ToAirport:     flight.ToAirport,
 		Date:          flight.Date,
+		Status:        ticket.Status,
 		Price:         flight.Price,
 		PaidByMoney:   privilege.PaidByMoney,
 		PaidByBonuses: privilege.PaidByBonuses,
@@ -47,4 +49,34 @@ type TicketCreateResponse struct {
 	FlightNumber string `json:"flightNumber"`
 	Price        int    `json:"price"`
 	Status       string `json:"status"`
+}
+
+type Ticket struct {
+	TicketUid    string `json:"ticketUid"`
+	Username     string `json:"username"`
+	FlightNumber string `json:"flightNumber"`
+	Price        int    `json:"price"`
+	Status       string `json:"status"`
+}
+
+type TicketResponse struct {
+	TicketUid    string `json:"ticketUid"`
+	FlightNumber string `json:"flightNumber"`
+	FromAirport  string `json:"fromAirport"`
+	ToAirport    string `json:"toAirport"`
+	Date         string `json:"date"`
+	Price        int    `json:"price"`
+	Status       string `json:"status"`
+}
+
+func ToTicketResponce(ticket *Ticket, flight *FlightResponse) *TicketResponse {
+	return &TicketResponse{
+		TicketUid:    ticket.TicketUid,
+		FlightNumber: ticket.FlightNumber,
+		FromAirport:  flight.FromAirport,
+		ToAirport:    flight.ToAirport,
+		Date:         flight.Date,
+		Price:        flight.Price,
+		Status:       ticket.Status,
+	}
 }

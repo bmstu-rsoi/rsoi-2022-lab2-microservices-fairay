@@ -6,7 +6,7 @@ import (
 
 type BalanceHistory struct {
 	Date          string `json:"date"`
-	BalanceDiff   int `json:"balanceDiff"`
+	BalanceDiff   int    `json:"balanceDiff"`
 	TicketUid     string `json:"ticketUid"`
 	OperationType string `json:"operationType"`
 }
@@ -32,4 +32,9 @@ type AddHistoryResponce struct {
 	PaidByMoney   int                `json:"paidByMoney"`
 	PaidByBonuses int                `json:"paidByBonuses"`
 	Privilege     PrivilegeShortInfo `json:"privilege"`
+}
+
+type UserInfoResponse struct {
+	Tickets   []TicketResponse   `json:"tickets"`
+	Privilege PrivilegeShortInfo `json:"privilege"`
 }

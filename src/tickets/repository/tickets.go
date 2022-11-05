@@ -36,12 +36,10 @@ func (rep *PGTicketsRep) Find(ticket_uid string) (*objects.Ticket, error) {
 		Error
 	switch err {
 	case nil:
-		break
+		return temp, err
 	case gorm.ErrRecordNotFound:
-		temp, err = nil, errors.RecordNotFound
+		return nil, errors.RecordNotFound
 	default:
-		temp, err = nil, errors.UnknownError
+		return nil, errors.UnknownError
 	}
-
-	return temp, err
 }

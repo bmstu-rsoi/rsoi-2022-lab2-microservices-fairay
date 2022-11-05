@@ -16,7 +16,7 @@ func (PrivilegeHistory) TableName() string {
 
 type BalanceHistory struct {
 	Date          string `json:"date"`
-	BalanceDiff   int 	 `json:"balanceDiff"`
+	BalanceDiff   int    `json:"balanceDiff"`
 	TicketUid     string `json:"ticketUid"`
 	OperationType string `json:"operationType"`
 }

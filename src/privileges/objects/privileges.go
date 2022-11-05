@@ -34,18 +34,3 @@ func ToPrivilegeInfoResponse(privilege *Privilege, history []PrivilegeHistory) *
 		balance_history,
 	}
 }
-
-type TicketResponse struct {
-	TicketUid    string `json:"ticketUid"`
-	FlightNumber string `json:"flightNumber"`
-	FromAirport  string `json:"fromAirport"`
-	ToAirport    string `json:"toAirport"`
-	Date         string `json:"date"`
-	Price        int    `json:"price"`
-	Status       string `json:"status"`
-}
-
-type UserInfoResponse struct {
-	Tickets   []TicketResponse   `json:"tickets"`
-	Privilege PrivilegeShortInfo `json:"privilege"`
-}

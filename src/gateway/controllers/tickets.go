@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"gateway/controllers/responses"
+	"gateway/errors"
 	"gateway/models"
 	"gateway/objects"
 
@@ -18,6 +19,7 @@ type ticketsCtrl struct {
 func InitTickets(r *mux.Router, tickets *models.TicketsM) {
 	ctrl := &ticketsCtrl{tickets: tickets}
 	r.HandleFunc("/tickets", ctrl.post).Methods("POST")
+	r.HandleFunc("/tickets/{ticketUid}", ctrl.get).Methods("GET")
 }
 
 func (ctrl *ticketsCtrl) post(w http.ResponseWriter, r *http.Request) {
@@ -33,5 +35,21 @@ func (ctrl *ticketsCtrl) post(w http.ResponseWriter, r *http.Request) {
 		responses.InternalError(w)
 	} else {
 		responses.JsonSuccess(w, data)
+	}
+}
+
+func (ctrl *ticketsCtrl) get(w http.ResponseWriter, r *http.Request) {
+	urlParams := mux.Vars(r)
+	ticket_uid := urlParams["ticketUid"]
+	username := r.Header.Get("X-User-Name")
+
+	data, err := ctrl.tickets.Find(ticket_uid, username)
+	switch err {
+	case nil:
+		responses.JsonSuccess(w, data)
+	case errors.ForbiddenTicket:
+		responses.Forbidden(w)
+	default:
+		responses.RecordNotFound(w, ticket_uid)
 	}
 }
