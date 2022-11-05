@@ -14,7 +14,6 @@ services:
     ports:
       - "5432:5432"
 
-# TODO добавить сервисы
   privileges:
     build:
       context: src/privileges
@@ -34,6 +33,16 @@ services:
       - postgres
     links: 
       - postgres
+  
+  tickets:
+    build:
+      context: src/tickets
+    ports:
+      - "8070:8080"
+    depends_on:
+      - postgres
+    links: 
+      - postgres
 
   gateway:
     build:
@@ -43,6 +52,7 @@ services:
     depends_on:
       - flights
       - privileges
+      - tickets
 
 volumes:
   db-data:

@@ -22,11 +22,26 @@ type TicketPurchaseResponse struct {
 	Privilege     PrivilegeShortInfo `json:"privilege"`
 }
 
-func NewTicketPurchaseResponse(flight *FlightResponse) *TicketPurchaseResponse {
+func NewTicketPurchaseResponse(flight *FlightResponse, ticket *TicketCreateResponse) *TicketPurchaseResponse {
 	return &TicketPurchaseResponse{
+		TicketUid: ticket.TicketUid,
 		FlightNumber: flight.FlightNumber,
 		FromAirport:  flight.FromAirport,
 		ToAirport:    flight.ToAirport,
 		Date:         flight.Date,
+		Price: 		  flight.Price,
 	}
+}
+
+type TicketCreateRequest struct {
+	FlightNumber  string  `json:"flightNumber" gorm:"not null"`
+	Price         int     `json:"price" gorm:"not null"`
+}
+
+type TicketCreateResponse struct {
+	TicketUid  	  string  `json:"ticketUid"`
+	Username	  string  `json:"username"`
+	FlightNumber  string  `json:"flightNumber"`
+	Price         int     `json:"price"`
+	Status        string  `json:"status"`
 }
