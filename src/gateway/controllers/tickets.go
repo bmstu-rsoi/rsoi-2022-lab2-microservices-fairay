@@ -12,11 +12,11 @@ import (
 )
 
 type ticketsCtrl struct {
-	flights *models.FlightsM
+	tickets *models.TicketsM
 }
 
-func InitTickets(r *mux.Router, flights *models.FlightsM) {
-	ctrl := &ticketsCtrl{flights: flights}
+func InitTickets(r *mux.Router, tickets *models.TicketsM) {
+	ctrl := &ticketsCtrl{tickets: tickets}
 	r.HandleFunc("/tickets", ctrl.post).Methods("POST")
 }
 
@@ -28,7 +28,8 @@ func (ctrl *ticketsCtrl) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if data, err := ctrl.flights.Find(req_body.FlightNumber); err != nil {
+	data, err := ctrl.tickets.Create(req_body.FlightNumber, r.Header.Get("X-User-Name"), req_body.Price, req_body.PaidFromBalance)
+	if err != nil {
 		responses.InternalError(w)
 	} else {
 		responses.JsonSuccess(w, data)

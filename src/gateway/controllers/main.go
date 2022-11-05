@@ -16,7 +16,7 @@ func initControllers(r *mux.Router, models *models.Models) {
 
 	InitFlights(api1_r, models.Flights)
 	InitPrivileges(api1_r, models.Privileges)
-	InitTickets(api1_r, models.Flights)
+	InitTickets(api1_r, models.Tickets)
 }
 
 func InitRouter() *mux.Router {

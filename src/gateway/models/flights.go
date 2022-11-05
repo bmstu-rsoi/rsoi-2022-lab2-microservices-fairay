@@ -38,13 +38,13 @@ func (model *FlightsM) Fetch(page int, page_size int) *objects.PaginationRespons
 	return data
 }
 
-func (model *FlightsM) Find(flight_number string) (*objects.FilghtResponse, error) {
+func (model *FlightsM) Find(flight_number string) (*objects.FlightResponse, error) {
 	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/flights/%s", utils.Config.FlightsEndpoint, flight_number), nil)
 	resp, err := model.client.Do(req)
 	if err != nil {
 		return nil, err
 	} else {
-		data := &objects.FilghtResponse{}
+		data := &objects.FlightResponse{}
 		body, _ := ioutil.ReadAll(resp.Body)
 		json.Unmarshal(body, data)
 		return data, nil
