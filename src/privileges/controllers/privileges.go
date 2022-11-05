@@ -4,6 +4,7 @@ import (
 	"privileges/controllers/responses"
 	"privileges/models"
 	"privileges/objects"
+	"privileges/utils"
 
 	"net/http"
 
@@ -22,6 +23,7 @@ func InitPrivileges(r *mux.Router, privileges *models.PrivilegesM, history *mode
 
 func (ctrl *privilegesCtrl) get(w http.ResponseWriter, r *http.Request) {
 	username := r.Header.Get("X-User-Name")
+	utils.Logger.Println(username)
 
 	privilege := ctrl.privileges.Find(username)
 	history := ctrl.history.Find(privilege.Id)

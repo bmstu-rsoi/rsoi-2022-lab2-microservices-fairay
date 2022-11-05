@@ -22,7 +22,7 @@ func InitPrivileges(r *mux.Router) {
 }
 
 func (ctrl *privilegeCtrl) get(w http.ResponseWriter, r *http.Request) {
-	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/privileges", utils.Config.PrivilegesEndpoint), nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/privilege", utils.Config.PrivilegesEndpoint), nil)
 	req.Header.Add("X-User-Name", r.Header.Get("X-User-Name"))
 	client := &http.Client{}
 	resp, err := client.Do(req)

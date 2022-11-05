@@ -28,6 +28,15 @@ func initDBConnection(cnf utils.DBConfiguration) *gorm.DB {
 
 	db.SingularTable(true)
 	db.AutoMigrate(&objects.Privilege{}, &objects.PrivilegeHistory{})
+
+	privilege := &objects.Privilege{
+		Id:       1,
+		Username: "Test Max",
+		Status:   "BRONZE",
+		Balance:  0,
+	}
+	db.FirstOrCreate(privilege)
+
 	return db
 }
 
