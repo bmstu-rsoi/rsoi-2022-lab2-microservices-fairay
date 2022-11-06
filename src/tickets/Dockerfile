@@ -12,7 +12,7 @@ RUN mkdir -p temp
 
 RUN go build -o ./app
 
-EXPOSE 8080
-ENV PORT=8080
+EXPOSE 8070
+ENV PORT=8070
 
 CMD [ "./app" ]

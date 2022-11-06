@@ -18,8 +18,8 @@ func InitConfig() {
 		"logs/server.log",
 		8080,
 
-		"http://flights:8080",
-		"http://tickets:8080",
-		"http://privileges:8080",
+		"http://flights:8060",
+		"http://tickets:8070",
+		"http://privileges:8050",
 	}
 }

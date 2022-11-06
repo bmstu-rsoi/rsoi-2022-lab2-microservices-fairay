@@ -29,10 +29,10 @@ func InitConfig() {
 			"tickets",
 			"program",
 			"test",
-			"host.docker.internal",
+			"postgres",
 			"5432",
 		},
 		"logs/server.log",
-		8080,
+		8070,
 	}
 }
